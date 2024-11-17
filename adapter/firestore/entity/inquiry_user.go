@@ -14,6 +14,7 @@ type FireStoreInquiryUsersResp struct {
 	ID                 string   `json:"id"`
 	Firstname          string   `json:"firstname"`
 	Lastname           string   `json:"lastname"`
+	Age                int      `json:"age"`
 	Email              string   `json:"email"`
 	City               string   `json:"city"`
 	IsCapitalCity      bool     `json:"is_capital_city"`
@@ -25,6 +26,7 @@ type FireStoreInquiryUserByIDResp struct {
 	ID                 string   `json:"id"`
 	Firstname          string   `json:"firstname"`
 	Lastname           string   `json:"lastname"`
+	Age                int      `json:"age"`
 	Email              string   `json:"email"`
 	City               string   `json:"city"`
 	IsCapitalCity      bool     `json:"is_capital_city"`
@@ -36,6 +38,7 @@ type FireStoreInquiryUsersByCityResp struct {
 	ID                 string   `json:"id"`
 	Firstname          string   `json:"firstname"`
 	Lastname           string   `json:"lastname"`
+	Age                int      `json:"age"`
 	Email              string   `json:"email"`
 	City               string   `json:"city"`
 	IsCapitalCity      bool     `json:"is_capital_city"`
@@ -43,11 +46,18 @@ type FireStoreInquiryUsersByCityResp struct {
 	FavoritePlaceCount int      `json:"favorite_place_count"`
 }
 
+type FireStoreSummaryUserBatchResp struct {
+	UserCount      int     `json:"user_count"`
+	SumUserAge     int     `json:"sum_user_age"`
+	AverageUserAge float64 `json:"average_user_age"`
+}
+
 func (resp *FireStoreInquiryUserByIDResp) ToCoreFireStoreInquiryUserByIDResp() *model.InquiryUserByIDResp {
 	return &model.InquiryUserByIDResp{
 		ID:                 resp.ID,
 		Firstname:          resp.Firstname,
 		Lastname:           resp.Lastname,
+		Age:                resp.Age,
 		Email:              resp.Email,
 		City:               resp.City,
 		IsCapitalCity:      resp.IsCapitalCity,
@@ -61,6 +71,7 @@ func (resp *FireStoreInquiryUsersByCityResp) ToCoreFireStoreInquiryUsersByCityRe
 		ID:                 resp.ID,
 		Firstname:          resp.Firstname,
 		Lastname:           resp.Lastname,
+		Age:                resp.Age,
 		Email:              resp.Email,
 		City:               resp.City,
 		IsCapitalCity:      resp.IsCapitalCity,
@@ -74,11 +85,20 @@ func (resp *FireStoreInquiryUsersResp) ToCoreFireStoreInquiryUsersResp() model.I
 		ID:                 resp.ID,
 		Firstname:          resp.Firstname,
 		Lastname:           resp.Lastname,
+		Age:                resp.Age,
 		Email:              resp.Email,
 		City:               resp.City,
 		IsCapitalCity:      resp.IsCapitalCity,
 		FavoritePlace:      resp.FavoritePlace,
 		FavoritePlaceCount: resp.FavoritePlaceCount,
+	}
+}
+
+func (resp *FireStoreSummaryUserBatchResp) ToCoreFireStoreSummaryUserBatchResp() *model.SummaryUserBatchResp {
+	return &model.SummaryUserBatchResp{
+		UserCount:      resp.UserCount,
+		SumUserAge:     resp.SumUserAge,
+		AverageUserAge: resp.AverageUserAge,
 	}
 }
 

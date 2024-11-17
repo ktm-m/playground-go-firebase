@@ -2,6 +2,7 @@ package firestore
 
 import (
 	"cloud.google.com/go/firestore"
+	"cloud.google.com/go/firestore/apiv1/firestorepb"
 	"context"
 	"errors"
 	"github.com/ktm-m/playground-go-firebase/adapter/firestore/entity"
@@ -80,6 +81,62 @@ func (a *adapter) InquiryUsersByCity(ctx context.Context, req *model.InquiryUser
 	}
 
 	return entity.MappingCoreFireStoreInquiryUsersByCityResp(respData), nil
+}
+
+func (a *adapter) SummaryUserBatch(ctx context.Context) (*model.SummaryUserBatchResp, error) {
+	appCtx, cancel := context.WithTimeout(ctx, 10*time.Second)
+	defer cancel()
+
+	// Get the count, sum, and average of a field in a collection
+	// Multiple aggregation queries can be executed in a single request
+	aggregationQuery := a.client.Collection("users").NewAggregationQuery().
+		WithCount("all").
+		WithSum("age", "sum_user_age").
+		WithAvg("age", "average_user_age")
+
+	// Single aggregation query
+	countQuery := a.client.Collection("users").NewAggregationQuery().WithCount("all")
+	countResult, err := countQuery.Get(appCtx)
+	if err != nil {
+		return nil, err
+	}
+
+	aggregationResult, err := aggregationQuery.Get(appCtx)
+	if err != nil {
+		return nil, err
+	}
+
+	count, ok := countResult["all"]
+	if !ok {
+		return nil, errors.New("failed to get count user")
+	}
+
+	countUser, ok := aggregationResult["all"]
+	if !ok {
+		return nil, errors.New("failed to get count user")
+	}
+
+	sumUserAge, ok := aggregationResult["sum_user_age"]
+	if !ok {
+		return nil, errors.New("failed to get sum of user age")
+	}
+
+	avgUserAge, ok := aggregationResult["average_user_age"]
+	if !ok {
+		return nil, errors.New("failed to get average of user age")
+	}
+
+	if count != countUser {
+		return nil, errors.New("count user is not equal")
+	}
+
+	respData := entity.FireStoreSummaryUserBatchResp{
+		UserCount:      int(countUser.(*firestorepb.Value).GetIntegerValue()),
+		SumUserAge:     int(sumUserAge.(*firestorepb.Value).GetIntegerValue()),
+		AverageUserAge: avgUserAge.(*firestorepb.Value).GetDoubleValue(),
+	}
+
+	return respData.ToCoreFireStoreSummaryUserBatchResp(), nil
 }
 
 func (a *adapter) mappingDocToFireStoreInquiryUsersResp(doc *firestore.DocumentSnapshot) entity.FireStoreInquiryUsersResp {

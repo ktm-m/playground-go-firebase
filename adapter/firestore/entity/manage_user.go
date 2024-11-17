@@ -8,6 +8,7 @@ import (
 type FireStoreInsertUserReq struct {
 	Firstname          string   `json:"firstname"`
 	Lastname           string   `json:"lastname"`
+	Age                int      `json:"age"`
 	Email              string   `json:"email"`
 	City               string   `json:"city"`
 	FavoritePlace      []string `json:"favorite_place"`
@@ -17,6 +18,7 @@ type FireStoreInsertUserReq struct {
 type FireStoreUpsertUserReq struct {
 	Firstname          string   `json:"firstname"`
 	Lastname           string   `json:"lastname"`
+	Age                int      `json:"age"`
 	Email              string   `json:"email"`
 	City               string   `json:"city"`
 	FavoritePlace      []string `json:"favorite_place"`
@@ -30,6 +32,7 @@ type FireStoreUpdateCapitalCityFlagReq struct {
 type FireStoreIncrementUpdateUserReq struct {
 	Firstname          *string  `json:"firstname"`
 	Lastname           *string  `json:"lastname"`
+	Age                *int     `json:"age"`
 	Email              *string  `json:"email"`
 	City               *string  `json:"city"`
 	FavoritePlace      []string `json:"favorite_place"`
@@ -56,6 +59,7 @@ func ToFireStoreInsertUserReq(req *model.InsertUserReq) (string, *FireStoreInser
 	return req.ID, &FireStoreInsertUserReq{
 		Firstname:          req.Firstname,
 		Lastname:           req.Lastname,
+		Age:                req.Age,
 		Email:              req.Email,
 		City:               req.City,
 		FavoritePlace:      req.FavoritePlace,
@@ -67,6 +71,7 @@ func ToFireStoreUpsertUserReq(req *model.UpsertUserReq) (string, *FireStoreUpser
 	return req.ID, &FireStoreUpsertUserReq{
 		Firstname:          req.Firstname,
 		Lastname:           req.Lastname,
+		Age:                req.Age,
 		Email:              req.Email,
 		City:               req.City,
 		FavoritePlace:      req.FavoritePlace,
@@ -84,6 +89,7 @@ func ToFireStoreIncrementUpdateUserReq(req *model.IncrementUpdateUserReq) (strin
 	return req.ID, &FireStoreIncrementUpdateUserReq{
 		Firstname:          req.Firstname,
 		Lastname:           req.Lastname,
+		Age:                req.Age,
 		Email:              req.Email,
 		City:               req.City,
 		FavoritePlace:      req.FavoritePlace,
@@ -129,6 +135,13 @@ func (req *FireStoreIncrementUpdateUserReq) BuildIncrementalUpdateData() []fires
 		updateData = append(updateData, firestore.Update{
 			Path:  "lastname",
 			Value: req.Lastname,
+		})
+	}
+
+	if req.Age != nil {
+		updateData = append(updateData, firestore.Update{
+			Path:  "age",
+			Value: req.Age,
 		})
 	}
 

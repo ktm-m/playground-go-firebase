@@ -4,6 +4,7 @@ type InsertUserReq struct {
 	ID                 string   `json:"id"`
 	Firstname          string   `json:"firstname"`
 	Lastname           string   `json:"lastname"`
+	Age                int      `json:"age"`
 	Email              string   `json:"email"`
 	City               string   `json:"city"`
 	FavoritePlace      []string `json:"favorite_place"`
@@ -14,6 +15,7 @@ type UpsertUserReq struct {
 	ID                 string   `json:"id"`
 	Firstname          string   `json:"firstname"`
 	Lastname           string   `json:"lastname"`
+	Age                int      `json:"age"`
 	Email              string   `json:"email"`
 	City               string   `json:"city"`
 	FavoritePlace      []string `json:"favorite_place"`
@@ -29,6 +31,7 @@ type IncrementUpdateUserReq struct {
 	ID                 string   `json:"id"`
 	Firstname          *string  `json:"firstname"`
 	Lastname           *string  `json:"lastname"`
+	Age                *int     `json:"age"`
 	Email              *string  `json:"email"`
 	City               *string  `json:"city"`
 	FavoritePlace      []string `json:"favorite_place"`

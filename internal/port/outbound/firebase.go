@@ -16,4 +16,5 @@ type FireStorePort interface {
 	AddMultipleFavoritePlace(ctx context.Context, req *model.AddMultipleFavoritePlaceReq) error
 	DeleteUserByID(ctx context.Context, req *model.DeleteUserByIDReq) error
 	DeleteCapitalCityFlag(ctx context.Context, req *model.DeleteCapitalCityFlagReq) error
+	SummaryUserBatch(ctx context.Context) (*model.SummaryUserBatchResp, error)
 }
