@@ -40,6 +40,11 @@ type AddOneFavoritePlaceReq struct {
 	FavoritePlace string `json:"favorite_place"`
 }
 
+type AddMultipleFavoritePlaceReq struct {
+	ID            string   `json:"id"`
+	FavoritePlace []string `json:"favorite_place"`
+}
+
 type DeleteUserByIDReq struct {
 	ID string `json:"id"`
 }

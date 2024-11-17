@@ -3,6 +3,7 @@ package firestore
 import (
 	"cloud.google.com/go/firestore"
 	"context"
+	"errors"
 	"fmt"
 	"github.com/ktm-m/playground-go-firebase/adapter/firestore/entity"
 	"github.com/ktm-m/playground-go-firebase/internal/model"
@@ -92,6 +93,58 @@ func (a *adapter) AddOneFavoritePlace(ctx context.Context, req *model.AddOneFavo
 			Path:  "favorite_place_count",
 			Value: firestore.Increment(1), // Increment count by 1
 		},
+	})
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (a *adapter) AddMultipleFavoritePlace(ctx context.Context, req *model.AddMultipleFavoritePlaceReq) error {
+	appCtx, cancel := context.WithTimeout(ctx, 10*time.Second)
+	defer cancel()
+
+	ID, data := entity.ToFireStoreAddMultipleFavoritePlaceReq(req)
+	ref := a.client.Collection("users").Doc(ID)
+
+	// Add an element to array and increment count by the number of elements using transaction
+	err := a.client.RunTransaction(appCtx, func(ctx context.Context, tx *firestore.Transaction) error {
+		doc, err := tx.Get(ref)
+		if err != nil {
+			return err
+		}
+
+		err = tx.Update(ref, []firestore.Update{
+			{
+				Path:  "favorite_place",
+				Value: firestore.ArrayUnion(data.FavoritePlace),
+			},
+		})
+		if err != nil {
+			return err
+		}
+
+		count, err := doc.DataAt("favorite_place_count")
+		if err != nil {
+			return err
+		}
+		updateCount := count.(int) + len(data.FavoritePlace)
+		if updateCount > 3 {
+			return errors.New("favorite place count exceeds the limit")
+		}
+
+		err = tx.Update(ref, []firestore.Update{
+			{
+				Path:  "favorite_place_count",
+				Value: updateCount,
+			},
+		})
+		if err != nil {
+			return err
+		}
+
+		return nil
 	})
 	if err != nil {
 		return err

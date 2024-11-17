@@ -13,6 +13,7 @@ type FireStorePort interface {
 	UpsertUser(ctx context.Context, req *model.UpsertUserReq) error
 	UpdateCapitalCityFlag(ctx context.Context, req *model.UpdateCapitalCityFlagReq) error
 	AddOneFavoritePlace(ctx context.Context, req *model.AddOneFavoritePlaceReq) error
+	AddMultipleFavoritePlace(ctx context.Context, req *model.AddMultipleFavoritePlaceReq) error
 	DeleteUserByID(ctx context.Context, req *model.DeleteUserByIDReq) error
 	DeleteCapitalCityFlag(ctx context.Context, req *model.DeleteCapitalCityFlagReq) error
 }

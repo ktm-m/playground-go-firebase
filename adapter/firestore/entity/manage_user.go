@@ -40,6 +40,10 @@ type FireStoreAddOneFavoritePlaceReq struct {
 	FavoritePlace string `json:"favorite_place"`
 }
 
+type FireStoreAddMultipleFavoritePlaceReq struct {
+	FavoritePlace []string `json:"favorite_place"`
+}
+
 type FireStoreDeleteUserByIDReq struct {
 	ID string `json:"id"`
 }
@@ -89,6 +93,12 @@ func ToFireStoreIncrementUpdateUserReq(req *model.IncrementUpdateUserReq) (strin
 
 func ToFireStoreAddOneFavoritePlaceReq(req *model.AddOneFavoritePlaceReq) (string, *FireStoreAddOneFavoritePlaceReq) {
 	return req.ID, &FireStoreAddOneFavoritePlaceReq{
+		FavoritePlace: req.FavoritePlace,
+	}
+}
+
+func ToFireStoreAddMultipleFavoritePlaceReq(req *model.AddMultipleFavoritePlaceReq) (string, *FireStoreAddMultipleFavoritePlaceReq) {
+	return req.ID, &FireStoreAddMultipleFavoritePlaceReq{
 		FavoritePlace: req.FavoritePlace,
 	}
 }
